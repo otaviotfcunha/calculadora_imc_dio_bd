@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:calculadora_imc/model/calculadora_imc.dart';
 import 'package:calculadora_imc/repository/historico_calculadora_repository.dart';
 import 'package:calculadora_imc/services/app_storage_service.dart';
@@ -13,6 +15,7 @@ class CalculadoraPage extends StatefulWidget {
 
 class _CalculadoraPageState extends State<CalculadoraPage> {
   AppStorageService storage = AppStorageService();
+  HistoricoCalculadoraRepository historicoRepository = HistoricoCalculadoraRepository();
   TextEditingController pesoController = TextEditingController();
   TextEditingController alturaController = TextEditingController();
   String nomeDoUsuario = "";
@@ -52,8 +55,12 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
           ),
           TextButton(
             onPressed: () async {
-              CalculadoraImc calcImc = CalculadoraImc();
+              Random randId = Random();
               double valor = 0.0;
+              double altura = 0.0;
+              double peso = 0.0;
+              double imc = 0.0;
+              String textoImc = "";
               String limpaDados = "";
 
               if (alturaController.text != "") {
@@ -68,7 +75,7 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
                 }
 
                 if (valor > 0) {
-                  calcImc.altura = valor;
+                  altura = valor;
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                       content: Text("A altura deve ser maior que 0, utilize . para separar decimais")));
@@ -92,7 +99,7 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
                   return;
                 }
                 if (valor > 0) {
-                  calcImc.peso = valor;
+                  peso = valor;
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                       content: Text("O peso deve ser maior que 0, utilize . para separar decimais")));
@@ -105,7 +112,10 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
                 pesoController.text = "0";
                 return;
               }
-              calcImc.calculaImc();
+              imc = CalculadoraImc.calculaImc(peso, altura);
+              textoImc = CalculadoraImc.criaFraseImc(imc);
+
+              CalculadoraImc calcImc = CalculadoraImc(randId.nextInt(100), nomeDoUsuario, peso, altura, textoImc, imc);
 
               showModalBottomSheet(
                 shape: RoundedRectangleBorder(
@@ -120,7 +130,7 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
                           padding: const EdgeInsets.symmetric(
                               vertical: 20, horizontal: 20),
                           child: Text(
-                              " A sua altura é: ${calcImc.altura}\n O seu peso é: ${calcImc.peso}\n O seu IMC é: ${calcImc.resultadoImc.toStringAsFixed(2)} que corresponde a: ${calcImc.fraseImc}"),
+                              " A sua altura é: $altura\n O seu peso é: $peso\n O seu IMC é: ${imc.toStringAsFixed(2)} que corresponde a: $textoImc"),
                         ),
                       ),
                     ],
@@ -128,7 +138,7 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
                 },
               );
               pesoController.text = "";
-              await HistoricoCalculadoraRepository.adicionarHistoricoCalculadora(calcImc);
+              await historicoRepository.salvar(calcImc);
               FocusManager.instance.primaryFocus?.unfocus();
             },
             child: const Text("Salvar e Calcular"),

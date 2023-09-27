@@ -10,23 +10,25 @@ class HistoricoPage extends StatefulWidget {
 }
 
 class _HistoricoPageState extends State<HistoricoPage> {
+
+  HistoricoCalculadoraRepository historicoRepository = HistoricoCalculadoraRepository();
+  var _historico = const <CalculadoraImc>[];
+
+  @override
+  void initState() {
+    super.initState();
+    obterHistorico();
+  }
+
+  void obterHistorico() async {
+    _historico = await historicoRepository.listarDados();
+    setState(() {});
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
-    var _historico = <CalculadoraImc>[];
-    _historico = HistoricoCalculadoraRepository.calculadoraHistorico;
-
-    void obterHistorico() async {
-      _historico = await HistoricoCalculadoraRepository.listaItensHistoricoCalculadora();
-      setState(() {});
-    }
-
-    @override
-    void initState() {
-      // TODO: implement initState
-      super.initState();
-      obterHistorico();
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("Histórico de Cálculos"),
@@ -43,7 +45,7 @@ class _HistoricoPageState extends State<HistoricoPage> {
                       const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                   child: ListTile(
                     title: Text(
-                        "Cálculo de IMC:\nAltura: ${hist.altura} - Peso: ${hist.peso}"),
+                        "${hist.nome}, seu cálculo de IMC é:\nAltura: ${hist.altura} - Peso: ${hist.peso}"),
                     subtitle: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -65,7 +67,7 @@ class _HistoricoPageState extends State<HistoricoPage> {
                     ),
                     trailing: TextButton(
                         onPressed: () async {
-                          await HistoricoCalculadoraRepository.removerHistoricoCalculadora(hist.id);
+                          await historicoRepository.remover(hist.id);
                           obterHistorico();
                         }, child: const Icon(Icons.delete)),
                   ),

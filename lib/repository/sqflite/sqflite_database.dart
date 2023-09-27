@@ -5,10 +5,11 @@ import 'package:path/path.dart' as path;
 Map<int, String> scripts = {
   1: ''' CREATE TABLE historico (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
+          nome TEXT,
           frase TEXT,
-          peso DOUBLE,
-          altura DOUBLE,
-          imc DOUBLE,
+          peso REAL,
+          altura REAL,
+          imc REAL
           );'''
 };
 

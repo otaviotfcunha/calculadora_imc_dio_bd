@@ -9,7 +9,6 @@ class ConfiguracoesPage extends StatefulWidget {
 }
 
 class _ConfiguracoesPageState extends State<ConfiguracoesPage> {
-  @override
   AppStorageService storage = AppStorageService();
 
   TextEditingController nomeUsuarioController = TextEditingController();

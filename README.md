@@ -4,10 +4,12 @@ Projeto de calculadora IMC em Flutter da DIO - Bootcamp Santander.
 
 ## Requisitos:
 <ol>
-    <li>- [x] Criar classe IMC (Peso / Altura)​</li>
+    <li>- [x] Criar classe IMC (Peso / Altura)​​</li>
+    <li>- [x] Altura ler em tela de Configurações​</li>
     <li>- [x] Ler dados no app​</li>
-    <li>- [x] Calcular IMC</li>
-    <li>- [x] Exibir em uma lista</li>
+    <li>- [x] Calcular IMC ​</li>
+    <li>- [x] Gravar dados no SQLite​ ​</li>
+    <li>- [x] Exibir em uma lista​​ ​</li>
 </ol>
 
 ## Fluxograma:
@@ -17,14 +19,20 @@ Projeto de calculadora IMC em Flutter da DIO - Bootcamp Santander.
 graph LR
 A((Inicio)) --> B[Home Page]
 B -- Calcular IMC --> C[Insere Dados]
-C --> E{Dados Corretos}
-E -- Sim --> F[Exibe Dados e Salva no Histórico]
+C --> E{Dados Corretos?}
+E -- Sim --> F[Exibe Dados e Salva no SQFlite]
 E -- Não --> G[Tratativa de Erros]
-B --> H[Histórico]
+B --> H[Carrega Histórico no SQFlite]
 H --> I[Lista de Cálculos Anteriores]
 I -- Remover Index --> J[Excluir Item]
 J -- Dado Removido --> I
 H -- Voltar --> B
+B --> K[Configurações]
+K -- Insere Dados --> L{Dados Corretos?}
+L -- Sim --> M[Salva Shared Preferences]
+L -- Não --> N[Tratativa de erros]
+M --> B
+K -- Voltar --> B
 ```
 
 ### Minhas redes sociais, conecte-se comigo:
